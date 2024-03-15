@@ -1,10 +1,10 @@
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import MapView, { LatLng, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
 
 import { Text, View } from "@/components/Themed";
 import { useEffect, useState } from "react";
-import { requestPermissions } from "../../helpers/location";
+import { requestPermissions } from "../helpers/location";
 
 export default function PathScreen() {
   const [routeCoordinates, setRouteCoordinates] = useState<LatLng[]>([]);
@@ -69,18 +69,20 @@ export default function PathScreen() {
       ) : (
         <Text>Loading</Text>
       )}
+      <ScrollView>
+        <Text>Content</Text>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    display: "flex",
+    flexDirection: "column",
   },
   map: {
     width: "100%",
-    height: "100%",
+    height: 350,
   },
 });
