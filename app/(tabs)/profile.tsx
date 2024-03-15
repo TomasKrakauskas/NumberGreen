@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 
 const ProfileScreen = () => {
+  console.log("Hello World");
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -14,25 +14,11 @@ const ProfileScreen = () => {
           size={30}
           color="black"
           style={styles.settingsIcon}
-        />{" "}
+        />
         <Text style={styles.nickname}>Your Nickname</Text>
       </View>
       <Text style={styles.sectionTitle}>Information</Text>
       <Text>Total number of steps: 1000</Text>
-    </View>
-  );
-};
-
-const TabTwoScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <ProfileScreen />
     </View>
   );
 };
@@ -74,4 +60,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TabTwoScreen;
+export default ProfileScreen;
