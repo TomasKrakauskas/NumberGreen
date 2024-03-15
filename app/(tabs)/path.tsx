@@ -43,12 +43,6 @@ export default function PathScreen() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log({
-      path,
-    });
-  }, [path]);
-
   return (
     <View style={styles.container}>
       {initialLocation ? (
