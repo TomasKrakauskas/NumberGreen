@@ -1,46 +1,122 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Text, View } from "@/components/Themed";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { auth } from "../../firebaseConfig";
 
 const ProfileScreen = () => {
+  const [profileData, setProfileData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const firestore = getFirestore();
+          const profileRef = doc(firestore, "profile", user.uid);
+          const profileSnapshot = await getDoc(profileRef);
+          if (profileSnapshot.exists()) {
+            setProfileData(profileSnapshot.data());
+          } else {
+            console.log("Profile document does not exist");
+          }
+        } else {
+          console.log("User is not authenticated");
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    fetchProfileData();
+
+    return () => {
+      setProfileData(null);
+    };
+  }, []);
+
+  if (!profileData) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topArea}>
-        <View style={styles.profileIcon}>
-          <FontAwesome name="user-circle" size={155} color="black" />
-        </View>
-        <Text style={styles.nickname}>Username</Text>
+        {profileData &&
+        profileData.user_image &&
+        isValidUrl(profileData.user_image) ? (
+          <Image
+            source={{ uri: profileData.user_image }}
+            style={styles.profileIcon}
+          />
+        ) : (
+          <View style={styles.profileIcon}>
+            <FontAwesome name="user-circle" size={155} color="black" />
+          </View>
+        )}
+        <Text style={styles.nickname}>{profileData.username}</Text>
       </View>
       <View style={styles.settingsContainer}>
         <FontAwesome name="cog" size={30} color="black" />
       </View>
       <View style={styles.metricsContainer}>
         <Text style={styles.metricText}>
-          Total steps: <Text style={styles.boldText}>1000</Text>
+          Total steps:{" "}
+          <Text style={styles.boldText}>{profileData.metrics.total_steps}</Text>
         </Text>
         <Text style={styles.metricText}>
-          Longest route: <Text style={styles.boldText}>1000</Text> steps
+          Longest route:{" "}
+          <Text style={styles.boldText}>
+            {profileData.metrics.longest_route}
+          </Text>{" "}
+          steps
         </Text>
         <Text style={styles.metricText}>
-          Fastest pace: <Text style={styles.boldText}>1000</Text> km/h
+          Fastest pace:{" "}
+          <Text style={styles.boldText}>
+            {profileData.metrics.fastest_pace}
+          </Text>{" "}
+          km/h
+        </Text>
+        <Text style={styles.metricText}>
+          Average pace:{" "}
+          <Text style={styles.boldText}>
+            {profileData.metrics.average_pace}
+          </Text>{" "}
+          km/h
         </Text>
       </View>
-      <Text style={styles.goalsText}>Goals beaten</Text>
-
-      <View style={styles.badgesContainer}>
-        <View style={[styles.badge, { backgroundColor: "#FF5733" }]}>
-          <Text style={styles.badgeText}>Wow, you are adopted!</Text>
+      {profileData.badges.length > 0 && (
+        <View>
+          <Text style={styles.goalsText}>Goals beaten</Text>
+          <View style={styles.badgesContainer}>
+            {profileData.badges.map((badge: string, index: number) => (
+              <View
+                key={index}
+                style={[styles.badge, { backgroundColor: "#FF5733" }]}
+              >
+                <Text style={styles.badgeText}>{badge}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-        <View style={[styles.badge, { backgroundColor: "#C70039" }]}>
-          <Text style={styles.badgeText}>You are actually not a loser!</Text>
-        </View>
-        <View style={[styles.badge, { backgroundColor: "#900C3F" }]}>
-          <Text style={styles.badgeText}>You are the best nerd here!</Text>
-        </View>
-      </View>
+      )}
     </View>
   );
+};
+
+const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 const styles = StyleSheet.create({
@@ -59,6 +135,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     marginTop: 60,
     marginBottom: 24,
+    width: 155,
+    height: 155,
+    borderRadius: 77.5,
   },
   nickname: {
     fontSize: 28,
@@ -109,6 +188,11 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontWeight: "bold",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
