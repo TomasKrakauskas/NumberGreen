@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet, Image, ScrollView } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Text, View } from "@/components/Themed";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -46,66 +46,72 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topArea}>
-        {profileData &&
-        profileData.user_image &&
-        isValidUrl(profileData.user_image) ? (
-          <Image
-            source={{ uri: profileData.user_image }}
-            style={styles.profileIcon}
-          />
-        ) : (
-          <View style={styles.profileIcon}>
-            <FontAwesome name="user-circle" size={155} color="black" />
-          </View>
-        )}
-        <Text style={styles.nickname}>{profileData.username}</Text>
-      </View>
-      <View style={styles.settingsContainer}>
-        <FontAwesome name="cog" size={30} color="black" />
-      </View>
-      <View style={styles.metricsContainer}>
-        <Text style={styles.metricText}>
-          Total steps:{" "}
-          <Text style={styles.boldText}>{profileData.metrics.total_steps}</Text>
-        </Text>
-        <Text style={styles.metricText}>
-          Longest route:{" "}
-          <Text style={styles.boldText}>
-            {profileData.metrics.longest_route}
-          </Text>{" "}
-          steps
-        </Text>
-        <Text style={styles.metricText}>
-          Fastest pace:{" "}
-          <Text style={styles.boldText}>
-            {profileData.metrics.fastest_pace}
-          </Text>{" "}
-          km/h
-        </Text>
-        <Text style={styles.metricText}>
-          Average pace:{" "}
-          <Text style={styles.boldText}>
-            {profileData.metrics.average_pace}
-          </Text>{" "}
-          km/h
-        </Text>
-      </View>
-      {profileData.badges.length > 0 && (
-        <View>
-          <Text style={styles.goalsText}>Goals beaten</Text>
-          <View style={styles.badgesContainer}>
-            {profileData.badges.map((badge: string, index: number) => (
-              <View
-                key={index}
-                style={[styles.badge, { backgroundColor: "#FF5733" }]}
-              >
-                <Text style={styles.badgeText}>{badge}</Text>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.contentContainer}>
+          <View style={styles.topArea}>
+            {profileData &&
+            profileData.user_image &&
+            isValidUrl(profileData.user_image) ? (
+              <Image
+                source={{ uri: profileData.user_image }}
+                style={styles.profileIcon}
+              />
+            ) : (
+              <View style={styles.profileIcon}>
+                <FontAwesome name="user-circle" size={155} color="black" />
               </View>
-            ))}
+            )}
+            <Text style={styles.nickname}>{profileData.username}</Text>
           </View>
+          <View style={styles.settingsContainer}>
+            <FontAwesome name="cog" size={30} color="black" />
+          </View>
+          <View style={styles.metricsContainer}>
+            <Text style={styles.metricText}>
+              Total steps:{" "}
+              <Text style={styles.boldText}>
+                {profileData.metrics.total_steps}
+              </Text>
+            </Text>
+            <Text style={styles.metricText}>
+              Longest route:{" "}
+              <Text style={styles.boldText}>
+                {profileData.metrics.longest_route}
+              </Text>{" "}
+              steps
+            </Text>
+            <Text style={styles.metricText}>
+              Fastest pace:{" "}
+              <Text style={styles.boldText}>
+                {profileData.metrics.fastest_pace}
+              </Text>{" "}
+              km/h
+            </Text>
+            <Text style={styles.metricText}>
+              Average pace:{" "}
+              <Text style={styles.boldText}>
+                {profileData.metrics.average_pace}
+              </Text>{" "}
+              km/h
+            </Text>
+          </View>
+          {profileData.badges.length > 0 && (
+            <View>
+              <Text style={styles.goalsText}>Goals beaten</Text>
+              <View style={styles.badgesContainer}>
+                {profileData.badges.map((badge: string, index: number) => (
+                  <View
+                    key={index}
+                    style={[styles.badge, { backgroundColor: "#FF5733" }]}
+                  >
+                    <Text style={styles.badgeText}>{badge}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
         </View>
-      )}
+      </ScrollView>
     </View>
   );
 };
@@ -122,6 +128,12 @@ const isValidUrl = (url: string): boolean => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
     alignItems: "center",
     justifyContent: "flex-start",
   },
