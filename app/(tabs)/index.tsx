@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { View, Text } from '@/components/Themed';
-import EditScreenInfo from '@/components/EditScreenInfo';
-import {onAuthStateChanged } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
-import { NavigationProp } from '@react-navigation/native';
-import {auth} from '@/firebaseConfig'
+import React, { useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { View, Text } from "@/components/Themed";
+import EditScreenInfo from "@/components/EditScreenInfo";
+import { onAuthStateChanged } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
+import { auth } from "@/firebaseConfig";
 
 type RootStackParamList = {
-  LoginScreen: undefined; 
-  
+  app: undefined;
+  signinscreen: undefined;
+  LoginScreen: undefined;
 };
 
 export default function TabOneScreen() {
@@ -18,17 +19,21 @@ export default function TabOneScreen() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        navigation.navigate('LoginScreen'); 
-    }});
-  
+        navigation.navigate("app");
+      }
+    });
 
-        return unsubscribe;
-  }, [navigation]); 
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <Text style={styles.title}>Hi One</Text>
+      <View
+        style={styles.separator}
+        lightColor="#eee"
+        darkColor="rgba(255,255,255,0.1)"
+      />
       <EditScreenInfo path="app/(tabs)/index.tsx" />
     </View>
   );
@@ -37,16 +42,16 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   separator: {
     marginVertical: 30,
     height: 1,
-    width: '80%',
+    width: "80%",
   },
 });
