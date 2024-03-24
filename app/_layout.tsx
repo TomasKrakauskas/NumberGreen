@@ -59,6 +59,7 @@ function RootLayoutNav() {
         <Stack.Screen name="LoginScreen" />
         <Stack.Screen name="RegisterScreen" />
         <Stack.Screen name="ResetPasswordScreen" />
+        <Stack.Screen name="GoalsScreen" />
       </Stack>
     </ThemeProvider>
   );
