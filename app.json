@@ -38,11 +38,7 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
-<<<<<<< Updated upstream
-      "package": "com.varun14.wabit"
-=======
       "package": "com.numbergreen.wabit"
->>>>>>> Stashed changes
     },
     "web": {
       "bundler": "metro",
@@ -67,11 +63,7 @@
         "origin": false
       },
       "eas": {
-<<<<<<< Updated upstream
-        "projectId": "84ec04b7-350f-4757-8810-0173a093dc4c"
-=======
         "projectId": "2a161c54-3508-4833-b3ab-e11312cd8670"
->>>>>>> Stashed changes
       }
     }
   }
