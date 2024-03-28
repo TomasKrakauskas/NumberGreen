@@ -50,9 +50,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="path"
+        name="track"
         options={{
-          title: "Path",
+          title: "Tracks",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

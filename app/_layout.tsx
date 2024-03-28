@@ -4,6 +4,8 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { PaperProvider } from "react-native-paper";
+
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -52,14 +54,23 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        <Stack.Screen name="LoginScreen" />
-        <Stack.Screen name="RegisterScreen" />
-        <Stack.Screen name="ResetPasswordScreen" />
-      </Stack>
-    </ThemeProvider>
+    <PaperProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="LoginScreen" />
+          <Stack.Screen name="RegisterScreen" />
+          <Stack.Screen name="ResetPasswordScreen" />
+          <Stack.Screen
+            name="path"
+            options={{
+              title: "Path",
+            }}
+            initialParams={{ trackId: -1 }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </PaperProvider>
   );
 }
