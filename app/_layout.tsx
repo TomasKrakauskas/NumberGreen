@@ -67,6 +67,7 @@ function RootLayoutNav() {
             options={{
               title: "Path",
             }}
+            initialParams={{ trackId: -1 }}
           />
         </Stack>
       </ThemeProvider>

@@ -9,7 +9,8 @@ export default function TrackScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const newTrack = () => navigation.navigate("path");
-  const viewTrack = () => navigation.navigate("path");
+  const viewTrack = (id: number) =>
+    navigation.navigate("path", { trackId: id });
 
   return (
     <ScrollView style={styles.container}>
@@ -26,7 +27,7 @@ export default function TrackScreen() {
               title={`Track ${index + 1}`}
               distance={0.7}
               image={`https://picsum.photos/${465 + index}`}
-              onPress={viewTrack}
+              onPress={() => viewTrack(index)}
             />
           ))}
         </View>
@@ -41,7 +42,7 @@ export default function TrackScreen() {
               title={`Track ${index + 1}`}
               distance={0.7}
               image={`https://picsum.photos/${701 + index}`}
-              onPress={viewTrack}
+              onPress={() => viewTrack(index)}
             />
           ))}
         </View>
