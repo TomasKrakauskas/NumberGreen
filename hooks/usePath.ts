@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { LatLng } from "react-native-maps";
 import * as Location from "expo-location";
-import { requestPermissions } from "../helpers/location";
+import {
+  requestBackgroundPermissions,
+  requestPermissions,
+} from "../helpers/location";
 import { getDistance } from "geolib";
 import { getUnixTimeStamp } from "@/helpers/util";
 
@@ -133,13 +136,17 @@ export default function usePath(): IPath {
   };
 
   const start = async (): Promise<void> => {
+    // request background permission
+    const response = await requestBackgroundPermissions();
+
     const subscription = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.High,
         distanceInterval: 5,
       },
       (location) => {
-        onCoordChange(location.coords);
+        if (location.coords.accuracy !== null && location.coords.accuracy < 50)
+          onCoordChange(location.coords);
       }
     );
     setLocationSubscription(subscription);
