@@ -2,12 +2,19 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Value from "@/components/Value";
 import RingProgress from "@/components/RingProgress";
+import { useEffect } from "react";
 
 export default function App() {
+  useEffect(() => {
+    //get the data from firebaseand update the values
+    
+
+
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.values}>
-        {/* <RingProgress progress={x walked/ y total daily} /> */}
+        <RingProgress progress={0.8} />
         <Value label="Streak" value="x days" />
         <Value label="Daily Goals" value="x walked/y total" />
         <Value label="Weekly Goals" value="x km walked/ y total" />
