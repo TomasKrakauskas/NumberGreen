@@ -22,6 +22,8 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState({ value: '', error: '' })
 
   const onSignUpPressed = () => {
+    //create profile record in db
+    //create goals record in db
     const nameError = nameValidator(name.value)
     const emailError = emailValidator(email.value)
     const passwordError = passwordValidator(password.value)
