@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   value: {
-    fontSize: 45,
+    fontSize: 30,
     color: '#AFB3BE',
     fontWeight: '500',
   },
