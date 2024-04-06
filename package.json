@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "npx expo start -c --tunnel",
-    "android": "npx expo run:android",
+    "android": "npx expo start --tunnel --android",
     "ios": "npx expo run:ios",
     "web": "npx expo start -c --tunnel --web",
     "test": "jest --watchAll"
