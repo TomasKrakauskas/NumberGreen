@@ -42,12 +42,12 @@ export default function App() {
       <View style={styles.values}>
         <RingProgress progress={0.8} />
 
-        <Value label="Streak" value={userData.streak} />
-        <Value label="Daily Goals" value={userData.daily_km} />
+        <Value label="Streak" value={(userData as any)?.streak} />
+        <Value label="Daily Goals" value={(userData as any)?.daily_km} />
         <Value label="Weekly Goals" value="x km walked/ y total" />
-        //@ts-ignore
+{ /* @ts-ignore */ }
 
-        {/* {(userData as any)?.badges &&
+        {(userData as any)?.badges &&
           (userData as any).badges.map((badge: any, index: number) => (
             <View
               key={index}
@@ -60,7 +60,7 @@ export default function App() {
               />
               <Text>{badge.badge_name}</Text>
             </View>
-          ))} */}
+          ))}
       </View>
 
       <StatusBar style="auto" />
