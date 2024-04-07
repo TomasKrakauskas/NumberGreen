@@ -30,7 +30,7 @@ export default function RegisterScreen() {
     createUserWithEmailAndPassword(auth, email.value, password.value).then(
       (userCredential) => {
         const user = userCredential.user;
-        createUserFirestoreDocs(user)
+        createUserFirestoreDocs(user.uid)
           .then(() => {
             navigation.navigate("(tabs)");
           })

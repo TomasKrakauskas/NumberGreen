@@ -3,6 +3,7 @@ import { db } from '@/firebaseConfig';
 import { Goals } from '@/interfaces/goals';
 import { TrackPerformance } from '@/interfaces/track';
 import { Profile } from '@/interfaces/profile';
+import { Badge } from '@/interfaces/badge';
 
 export default async function createUserFirestoreDocs(userId: string) {
   if (!userId) throw new Error('A valid user ID is required');
@@ -11,7 +12,7 @@ export default async function createUserFirestoreDocs(userId: string) {
   const profileRef = doc(db, 'profile',userId);
   const trackPerformanceRef = doc(db, 'track_performance',userId);
 
-  const badges = [
+  const badges: Badge[] = [
   {
     badge_link: "https://cdn2.iconfinder.com/data/icons/gamification-badges-1/300/streak_7d1-1024.png",
     badge_name: "7 days",
