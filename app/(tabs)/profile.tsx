@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Image, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Text, View } from "@/components/Themed";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth } from "../../firebaseConfig";
 
 const ProfileScreen = () => {
   const [profileData, setProfileData] = useState<any>(null);
+  const [showTick, setShowTick] = useState(false); // Initially set to false for normal mode
+  const [newUsername, setNewUsername] = useState(""); // State to track the new username input
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -36,6 +45,40 @@ const ProfileScreen = () => {
     };
   }, []);
 
+  const handleSettingsClick = () => {
+    // Toggle showTick state
+    setShowTick((prev) => !prev);
+  };
+
+  const handleChangeUsername = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const trimmedUsername = newUsername.trim();
+        if (trimmedUsername !== "") {
+          const firestore = getFirestore();
+          const profileRef = doc(firestore, "profile", user.uid);
+          await updateDoc(profileRef, { username: trimmedUsername });
+          // Update profile data in state
+          setProfileData((prevProfileData: any) => ({
+            ...prevProfileData,
+            username: trimmedUsername,
+          }));
+          // Reset newUsername input field
+          setNewUsername("");
+        }
+        // Switch back to normal mode after username update or if newUsername is empty
+        setShowTick(false);
+      }
+    } catch (error) {
+      console.error("Error updating username:", error);
+      Alert.alert(
+        "Error",
+        "Failed to update username. Please try again later."
+      );
+    }
+  };
+
   if (!profileData) {
     return (
       <View style={styles.loadingContainer}>
@@ -61,11 +104,30 @@ const ProfileScreen = () => {
                 <FontAwesome name="user-circle" size={155} color="black" />
               </View>
             )}
-            <Text style={styles.nickname}>{profileData.username}</Text>
+            <View style={styles.usernameContainer}>
+              {showTick ? (
+                <TextInput
+                  style={styles.nicknameInput}
+                  value={newUsername}
+                  onChangeText={setNewUsername}
+                  placeholder="Enter new username"
+                />
+              ) : (
+                <Text style={styles.nickname}>{profileData.username}</Text>
+              )}
+            </View>
           </View>
-          <View style={styles.settingsContainer}>
-            <FontAwesome name="cog" size={30} color="black" />
-          </View>
+          <TouchableOpacity
+            style={styles.settingsContainer}
+            onPress={showTick ? handleChangeUsername : handleSettingsClick}
+          >
+            {/* Conditionally render settings or tick icon based on showTick state */}
+            {showTick ? (
+              <FontAwesome name="check-circle" size={30} color="black" />
+            ) : (
+              <FontAwesome name="cog" size={30} color="black" />
+            )}
+          </TouchableOpacity>
           <View style={styles.metricsContainer}>
             <Text style={styles.metricText}>
               Total steps:{" "}
@@ -128,6 +190,7 @@ const isValidUrl = (url: string): boolean => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff", // Added background color to fix the white background
   },
   scrollView: {
     flex: 1,
@@ -151,9 +214,21 @@ const styles = StyleSheet.create({
     height: 155,
     borderRadius: 77.5,
   },
+  usernameContainer: {
+    alignItems: "center",
+  },
   nickname: {
+    backgroundColor: "#f2f2f2",
     fontSize: 28,
     fontWeight: "bold",
+  },
+  nicknameInput: {
+    backgroundColor: "#f2f2f2",
+    fontSize: 28,
+    fontWeight: "bold",
+    borderBottomWidth: 1,
+    borderBottomColor: "black",
+    padding: 5,
   },
   settingsContainer: {
     position: "absolute",
