@@ -4,12 +4,26 @@ import { View } from "@/components/Themed";
 import { Button, Card, Divider, Text } from "react-native-paper";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ITrackState, loadTracks } from "@/store/slices/track";
+import { AppDispatch, IReduxState } from "@/store/store";
 
 export default function TrackScreen() {
+  const dispatch: AppDispatch = useDispatch();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
+  const { loading, userTracks, publicTracks } = useSelector<
+    IReduxState,
+    ITrackState
+  >((state) => state.tracks);
+
+  useEffect(() => {
+    dispatch(loadTracks(""));
+  }, []);
+
   const newTrack = () => navigation.navigate("path");
-  const viewTrack = (id: number) =>
+  const viewTrack = (id: string) =>
     navigation.navigate("path", { trackId: id });
 
   return (
@@ -21,13 +35,13 @@ export default function TrackScreen() {
       <View style={styles.track}>
         <Text variant="headlineMedium">Walked Tracks</Text>
         <View style={styles.trackWrapper}>
-          {[0, 1, 2].map((index) => (
+          {userTracks.map((track, index) => (
             <TrackCard
               key={index}
-              title={`Track ${index + 1}`}
+              title={track.name}
               distance={0.7}
               image={`https://picsum.photos/${465 + index}`}
-              onPress={() => viewTrack(index)}
+              onPress={() => viewTrack(track.id)}
             />
           ))}
         </View>
@@ -36,13 +50,13 @@ export default function TrackScreen() {
       <View style={styles.track}>
         <Text variant="headlineMedium">Find new tracks</Text>
         <View style={styles.trackWrapper}>
-          {[0, 1, 2].map((index) => (
+          {publicTracks.map((track, index) => (
             <TrackCard
               key={index}
-              title={`Track ${index + 1}`}
+              title={track.name}
               distance={0.7}
               image={`https://picsum.photos/${701 + index}`}
-              onPress={() => viewTrack(index)}
+              onPress={() => viewTrack(track.id)}
             />
           ))}
         </View>
