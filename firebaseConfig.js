@@ -3,7 +3,6 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyDxvCFzntOqEh1iitPzyG2IDiMWX4VqE6A",
   authDomain: "numbergreen-3c216.firebaseapp.com",
