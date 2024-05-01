@@ -31,8 +31,7 @@ async function uploadData(data) {
         .catch((error) => console.error("Failed to upload data: ", error));
 }
 
-
-    fs.readFile('helpers/tracks.json', 'utf8', async (err, data) => {
+fs.readFile("tracks.json", "utf8", async (err, data) => {
     if (err) {
         console.error("Failed to read file: ", err);
         return;
