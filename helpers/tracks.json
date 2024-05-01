@@ -242,5 +242,95 @@
       { "latitude": 54.8951882416, "longitude": 23.88646905914 },
       { "latitude": 54.8951621106, "longitude": 23.88661869573 }
     ]
+  },
+  {
+    "trackName": "Kaunas Street Art Tour",
+    "markers": [
+      {
+        "latitude": 54.898889,
+        "longitude": 23.881581,
+        "name": "PINECONE MAN BY Lukas Šiupšinskas"
+      },
+      {
+        "latitude": 54.89942753836573,
+        "longitude": 23.885040594247272,
+        "name": "THE FREEDOM WARRIOR BY Arūnas Sakalauskas"
+      },
+      {
+        "latitude": 54.90028870892587,
+        "longitude": 23.889435932126588,
+        "name": "THE WISE OLD MAN BY Gyva Grafika"
+      },
+      {
+        "latitude": 54.89882646986561,
+        "longitude": 23.887365715956577,
+        "name": "BACK HOME BY Tadas Vincaitis-Plūgas"
+      }
+    ],
+    "polyline": [
+      { "latitude": 54.899866508, "longitude": 23.884769775 },
+      { "latitude": 54.8997986255, "longitude": 23.8844265394 },
+      { "latitude": 54.8997245718, "longitude": 23.8841583865 },
+      { "latitude": 54.8996443467, "longitude": 23.8839009598 },
+      { "latitude": 54.8995358648, "longitude": 23.8836261661 },
+      { "latitude": 54.899430069, "longitude": 23.8833732 },
+      { "latitude": 54.8993242731, "longitude": 23.8831202339 },
+      { "latitude": 54.8992184773, "longitude": 23.8828672678 },
+      { "latitude": 54.8991126815, "longitude": 23.8826143017 },
+      { "latitude": 54.8990773304, "longitude": 23.8823076055 },
+      { "latitude": 54.8989857096, "longitude": 23.882094098 },
+      { "latitude": 54.8988931405, "longitude": 23.8814505312 },
+      { "latitude": 54.8988435663, "longitude": 23.8817512113 },
+      { "latitude": 54.8986873157, "longitude": 23.881906142 },
+      { "latitude": 54.898531065, "longitude": 23.8820610726 },
+      { "latitude": 54.8983748144, "longitude": 23.8822160033 },
+      { "latitude": 54.8982185638, "longitude": 23.8823709339 },
+      { "latitude": 54.8983410111, "longitude": 23.8826000518 },
+      { "latitude": 54.8984634584, "longitude": 23.8828291696 },
+      { "latitude": 54.8985859057, "longitude": 23.8830582875 },
+      { "latitude": 54.8985428285, "longitude": 23.883361976 },
+      { "latitude": 54.8984997513, "longitude": 23.8836656645 },
+      { "latitude": 54.8984566741, "longitude": 23.883969353 },
+      { "latitude": 54.8984135969, "longitude": 23.8842730415 },
+      { "latitude": 54.8983705197, "longitude": 23.8845767299 },
+      { "latitude": 54.8983274425, "longitude": 23.8848804185 },
+      { "latitude": 54.8982843653, "longitude": 23.885184107 },
+      { "latitude": 54.8982412881, "longitude": 23.8854877955 },
+      { "latitude": 54.8981982109, "longitude": 23.885791484 },
+      { "latitude": 54.8981551337, "longitude": 23.8860951725 },
+      { "latitude": 54.8981120565, "longitude": 23.886398861 },
+      { "latitude": 54.8982594373, "longitude": 23.8865781607 },
+      { "latitude": 54.8984068182, "longitude": 23.8867574603 },
+      { "latitude": 54.898554199, "longitude": 23.88693676 },
+      { "latitude": 54.8987015798, "longitude": 23.8871160597 },
+      { "latitude": 54.8988680961, "longitude": 23.8872343104 },
+      { "latitude": 54.8990346123, "longitude": 23.8873525611 },
+      { "latitude": 54.8992011286, "longitude": 23.8874708118 },
+      { "latitude": 54.8992718308, "longitude": 23.8877555378 },
+      { "latitude": 54.8992585068, "longitude": 23.8880884001 },
+      { "latitude": 54.8993582278, "longitude": 23.8885599964 },
+      { "latitude": 54.8995186789, "longitude": 23.8883776524 },
+      { "latitude": 54.899666787, "longitude": 23.8882060346 },
+      { "latitude": 54.8997963812, "longitude": 23.8880880474 },
+      { "latitude": 54.8999321461, "longitude": 23.8879915123 },
+      { "latitude": 54.9001357926, "longitude": 23.8882167607 },
+      { "latitude": 54.9002530431, "longitude": 23.8885492703 },
+      { "latitude": 54.9003280237, "longitude": 23.8888776309 },
+      { "latitude": 54.9004629093, "longitude": 23.8890845574 },
+      { "latitude": 54.9004443459, "longitude": 23.8887316142 },
+      { "latitude": 54.9003764644, "longitude": 23.8884420091 },
+      { "latitude": 54.9002900695, "longitude": 23.8881524041 },
+      { "latitude": 54.9002283588, "longitude": 23.8879057034 },
+      { "latitude": 54.9001533717, "longitude": 23.8876160902 },
+      { "latitude": 54.9000914642, "longitude": 23.8873223968 },
+      { "latitude": 54.9000295567, "longitude": 23.8870287034 },
+      { "latitude": 54.8999676492, "longitude": 23.8867350099 },
+      { "latitude": 54.8999057417, "longitude": 23.8864413165 },
+      { "latitude": 54.8999189239, "longitude": 23.8861293537 },
+      { "latitude": 54.8999321061, "longitude": 23.8858173908 },
+      { "latitude": 54.8999452883, "longitude": 23.8855054279 },
+      { "latitude": 54.8999195823, "longitude": 23.885195835 },
+      { "latitude": 54.8998938763, "longitude": 23.8848862421 }
+    ]
   }
 ]
