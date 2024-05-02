@@ -15,6 +15,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
 
+        <link
+          href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Nunito:wght@400;700&display=swap"
+          rel="stylesheet"
+        ></link>
         {/* 
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native. 
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
