@@ -1,7 +1,7 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
+import { Pressable, Image } from "react-native";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
@@ -56,12 +56,24 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
-    
-    <Tabs.Screen
+
+      <Tabs.Screen
         name="goals-screen"
         options={{
           title: "Goals Screen",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Image
+              source={require("../../assets/images/profile_icon.png")}
+              style={{ width: 24, height: 24, tintColor: "#000000" }}
+            />
+          ),
         }}
       />
     </Tabs>
