@@ -64,6 +64,10 @@ function RootLayoutNav() {
             name="RegisterScreen"
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="AchievementsScreen"
+            options={{ headerShown: false }}
+          />
 
           <Stack.Screen name="ResetPasswordScreen" />
           <Stack.Screen
