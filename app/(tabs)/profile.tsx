@@ -14,6 +14,8 @@ import { auth } from "@/firebaseConfig";
 import { Button } from "react-native-paper";
 import { Dropdown } from "react-native-element-dropdown";
 import { passwordValidator } from "@/helpers/passwordValidator";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
 
 const data = [
   { label: "Easy", value: "easy" },
@@ -21,15 +23,21 @@ const data = [
   { label: "Hard", value: "hard" },
 ];
 
+type RootStackParamList = {
+  AchievementsScreen: undefined;
+};
+
 const ProfileScreen = () => {
   const [profileData, setProfileData] = useState<any>(null);
   const [editMode, setEditMode] = useState(false);
+  const [passwordMode, setPasswordMode] = useState(false);
   const [value, setValue] = useState("Easy");
   const [isFocus, setIsFocus] = useState(false);
   const [username, setUsername] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -73,13 +81,31 @@ const ProfileScreen = () => {
     setEditMode(!editMode);
   };
 
+  const changePassword = async () => {
+    setPasswordMode(!passwordMode);
+  };
+
   const closeEditMode = () => {
     setEditMode(false);
   };
 
+  const closePasswordMode = () => {
+    setPasswordMode(false);
+  };
+
   const editPassword = async () => {
-    const passwordError = passwordValidator(oldPassword);
-    Alert.alert("Good", passwordError);
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const firestore = getFirestore();
+        const profileRef = doc(firestore, "profile", user.uid);
+        setPasswordMode(false);
+      } else {
+        console.log("User is not authenticated");
+      }
+    } catch (error) {
+      console.error("Error saving password:", error);
+    }
     /*
     const user = auth.currentUser;
 
@@ -160,6 +186,14 @@ const ProfileScreen = () => {
           </View>
           <View style={styles.settingContainer2}>
             <Button
+              mode="contained"
+              compact
+              style={styles.logoutButton2}
+              onPress={logOutUser}
+            >
+              Logout
+            </Button>
+            <Button
               mode="contained-tonal"
               textColor="#333333"
               compact
@@ -169,12 +203,13 @@ const ProfileScreen = () => {
               Edit
             </Button>
             <Button
-              mode="contained"
+              mode="contained-tonal"
+              textColor="#333333"
               compact
-              style={styles.logoutButton2}
-              onPress={logOutUser}
+              style={styles.changePassword2}
+              onPress={changePassword}
             >
-              Logout
+              Change password
             </Button>
           </View>
           <View style={styles.metricsContainer}>
@@ -204,7 +239,12 @@ const ProfileScreen = () => {
           </View>
           <View style={styles.oneRawMetrics}>
             <Text style={styles.goalsText}>Achievements</Text>
-            <Text style={styles.viewAllText}>View All</Text>
+            <Text
+              style={styles.viewAllText}
+              onPress={() => navigation.navigate("AchievementsScreen")}
+            >
+              View All
+            </Text>
           </View>
           <View style={styles.badgesContainer}>
             <ScrollView
@@ -271,14 +311,6 @@ const ProfileScreen = () => {
                 setIsFocus(false);
               }}
             />
-            <Button
-              style={styles.saveEditProfileButton}
-              textColor="#343434"
-              compact
-              onPress={saveProfile}
-            >
-              Save
-            </Button>
             <View
               style={{
                 marginTop: 24,
@@ -287,7 +319,25 @@ const ProfileScreen = () => {
                 borderWidth: 1,
               }}
             />
-            <Text style={styles.changePasswordText}>Change password</Text>
+            <Button
+              style={styles.saveEditProfileButton}
+              textColor="#343434"
+              compact
+              onPress={saveProfile}
+            >
+              Save
+            </Button>
+          </View>
+        </View>
+      )}
+
+      {passwordMode && (
+        <View style={styles.editModeOverlay}>
+          <View style={styles.editModeView}>
+            <Button style={styles.closeButton} onPress={closePasswordMode}>
+              <FontAwesome name="close" size={22} color="black" />
+            </Button>
+            <Text style={styles.editProfileTitle}>Change Password</Text>
             <Text style={styles.editTextFeilds}>Old Password</Text>
             <TextInput
               onChangeText={setOldPassword}
@@ -297,6 +347,14 @@ const ProfileScreen = () => {
             <TextInput
               onChangeText={setNewPassword}
               style={styles.editTextInputs}
+            />
+            <View
+              style={{
+                marginTop: 24,
+                borderColor: "#efefef",
+                width: 240,
+                borderWidth: 1,
+              }}
             />
             <Button
               style={styles.saveEditProfileButton}
@@ -367,16 +425,6 @@ const styles = StyleSheet.create({
     marginLeft: 32,
     marginRight: 32,
   },
-  editButton2: {
-    backgroundColor: "#e2e2e2",
-    color: "#FFFFFF",
-    borderRadius: 6,
-    paddingLeft: 8,
-    paddingRight: 8,
-    gap: 8,
-    fontSize: 12,
-    marginLeft: 172,
-  },
   logoutButton2: {
     backgroundColor: "#ef5350",
     color: "#000000",
@@ -385,7 +433,26 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     gap: 8,
     fontSize: 12,
-    marginLeft: 16,
+  },
+  editButton2: {
+    backgroundColor: "#e2e2e2",
+    color: "#FFFFFF",
+    borderRadius: 6,
+    paddingLeft: 8,
+    paddingRight: 8,
+    gap: 8,
+    fontSize: 12,
+    marginLeft: 44,
+  },
+  changePassword2: {
+    backgroundColor: "#e2e2e2",
+    color: "#FFFFFF",
+    borderRadius: 6,
+    paddingLeft: 8,
+    paddingRight: 8,
+    gap: 8,
+    fontSize: 12,
+    marginLeft: 8,
   },
   oneRawMetrics: {
     backgroundColor: "#f2f2f2",
@@ -444,7 +511,7 @@ const styles = StyleSheet.create({
   goalsText: {
     backgroundColor: "#f2f2f2",
     color: "#343434",
-    marginTop: 16,
+    marginTop: 30,
     fontSize: 20,
     marginLeft: 32,
     marginRight: 168,
@@ -454,7 +521,7 @@ const styles = StyleSheet.create({
   viewAllText: {
     backgroundColor: "#f2f2f2",
     color: "#a1a1a1",
-    marginTop: 19,
+    marginTop: 35,
     fontSize: 12,
     marginRight: 32,
     fontWeight: "400",
@@ -498,7 +565,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: "100%",
+    height: "80%",
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -512,12 +579,12 @@ const styles = StyleSheet.create({
   },
   editProfileTitle: {
     marginTop: 10,
+    marginBottom: 24,
     fontWeight: "600",
     fontSize: 20,
   },
   editProfileIcon: {
     alignSelf: "center",
-    marginTop: 24,
     width: 100,
     height: 100,
     borderRadius: 77.5,
