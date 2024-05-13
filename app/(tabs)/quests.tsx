@@ -1,52 +1,100 @@
-//a page that shows all possible quests, you can click on a quest to see more detials, and start it
+import React from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import * as React from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
-import { Link } from "expo-router";
-import { useNavigation } from "expo-router";
-import { useRoute } from "expo-router";
-import { useQuery } from "react-query";
-import { useMutation } from "react-query";
-import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import { useColorScheme } from "@/components/useColorScheme";
-import { Pressable } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Colors from "@/constants/Colors";
-import { Quest } from "@/types";
-import { getQuests } from "@/api/quests";
-import { startQuest } from "@/api/quests";
-
-function Quest({ quest }: { quest: Quest }) {
-  const navigation = useNavigation();
-  const route = useRoute();
-
-  return (
-    <Pressable
-      onPress={() => {
-        navigation.navigate("quest", { id: quest.id });
-      }}
-      style={({ pressed }) => [
-        {
-          backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
-        },
-        styles.quest,
-      ]}
-    >
-      <Text style={styles.title}>{quest.title}</Text>
-      <Text style={styles.description}>{quest.description}</Text>
-    </Pressable>
-  );
+interface Quest {
+    title: string;
+    description: string;
+    icon: string;
+    distance: number;
+    onPress?: () => void; // Add the 'onPress' property to the 'Quest' interface
 }
 
-export default function Quests() {
-  const colorScheme = useColorScheme();
-  const { data: quests } = useQuery("quests", getQuests);
+const Item: React.FC<Quest> = ({ title, description, icon, distance, onPress} ) => (
+    <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+        <Image
+                source={{ uri: icon }}
+                style={{ width: 100, height: 100, marginBottom: 5 }}
+                resizeMode="contain"
+              />
+        <View style={{ flex: 1 }}>
+            <Text style={{ fontWeight: 'bold' }}>{title}</Text>
+            <Text numberOfLines={1} style={{ color: '#666' }}>{description}</Text>
+        </View>
+        <Text>{distance} km</Text>
+    </TouchableOpacity>
+);
 
-  return (
-    <View style={styles.container}>
-      {quests?.map((quest) => (
-        <Quest key={quest.id} quest={quest} />
-      ))}
+
+
+interface ListItem {
+  title: string;
+  description: string;
+  icon: string;
+  distance: number;
+}
+
+interface ListItemsProps {
+  items: ListItem[];
+  naviagateToDetail: (item: ListItem) => void;
+}
+
+const ListItems: React.FC<ListItemsProps> = ({ items, naviagateToDetail }) => (
+    <View>
+        {items.map((item: ListItem, index: number) => (
+            <Item
+                key={index}
+                title={item.title}
+                description={item.description}
+                icon={item.icon}
+                distance={item.distance}
+                onPress={() => naviagateToDetail(item)}
+            />
+        ))}
     </View>
-  );
+);
+
+
+const navigateToDetail = (item: any) => {
+  console.log('Navigated to:', item);
+  // Here you would typically use something like navigation.navigate('DetailPage', { item });
+};
+
+export default function app() {
+
+    return(
+<ListItems items={[
+  { title: 'Place 1', description: 'Description of place 1', icon: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FPixelArt%2Fcomments%2F15z47dt%2Fi_got_bored_so_i_decided_to_draw_a_random_image%2F&psig=AOvVaw00Ca9IjF2XH3gOR6QB3zWM&ust=1715625766873000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPji0ZTiiIYDFQAAAAAdAAAAABAE", distance: 5 },
+  { title: 'Place 2', description: 'Description of place 2', icon: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FPixelArt%2Fcomments%2F15z47dt%2Fi_got_bored_so_i_decided_to_draw_a_random_image%2F&psig=AOvVaw00Ca9IjF2XH3gOR6QB3zWM&ust=1715625766873000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPji0ZTiiIYDFQAAAAAdAAAAABAE", distance: 15 }
+]}
+naviagateToDetail={navigateToDetail}
+/>
+    );
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 12,
+  },
+  values: {
+    marginTop: 50,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  badgeStyle: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  badgesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginTop: 50,
+  },
+});
