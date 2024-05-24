@@ -12,6 +12,7 @@ import { Text, View } from "@/components/Themed";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth } from "../../firebaseConfig";
 import { Button } from "react-native-paper";
+import createUserFirestoreDocs from "@/helpers/createUserDocs";
 
 const ProfileScreen = () => {
   const [profileData, setProfileData] = useState<any>(null);

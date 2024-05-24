@@ -30,26 +30,28 @@ export interface MTrackPerformance {
 export const createPerformance = (
   userId: string,
   trackId: string,
-  performance: MTrackPerformance
+  performance: Omit<MTrackPerformance, "id" | "creatorId" | "trackId">
 ): Promise<[string | null, string | null]> => {
   return new Promise(async (resolve) => {
     try {
       const firestore = getFirestore();
 
-      const _performance: Omit<MTrackPerformance, "id"> = {
+      const _performance = {
+        ...performance,
         trackId,
         creatorId: userId,
-        start: performance.start,
-        end: performance.end,
-        distance: performance.distance,
-        speed_ms: performance.speed_ms,
-        stepsTaken: performance.stepsTaken,
-        path: performance.path,
       };
+
+      console.log({
+        userId,
+        trackId,
+        performance,
+        _performance,
+      });
 
       // create performance
       const { id: performanceId } = await addDoc(
-        collection(firestore, "performance"),
+        collection(firestore, "track_performance"),
         _performance
       );
 
@@ -58,7 +60,9 @@ export const createPerformance = (
 
       return resolve([null, performanceId]);
     } catch (e) {
-      console.error(e);
+      console.error(
+        `Something went wrong when creating the track performance! Exited with error: ${e}`
+      );
       return resolve(["Something went wrong!", null]);
     }
   });
