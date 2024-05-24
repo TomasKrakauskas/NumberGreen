@@ -80,28 +80,30 @@ function RootLayoutNav() {
   return (
     <PaperProvider>
       <ThemeProvider value={DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="RegisterScreen"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="AchievementsScreen"
-            options={{ headerShown: false }}
-          />
+        <Provider store={store}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="RegisterScreen"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AchievementsScreen"
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen name="ResetPasswordScreen" />
-          <Stack.Screen
-            name="path"
-            options={{
-              title: "Path",
-            }}
-            initialParams={{ trackId: -1 }}
-          />
-        </Stack>
+            <Stack.Screen name="ResetPasswordScreen" />
+            <Stack.Screen
+              name="path"
+              options={{
+                title: "Path",
+              }}
+              initialParams={{ trackId: undefined }}
+            />
+          </Stack>
+        </Provider>
       </ThemeProvider>
     </PaperProvider>
   );
