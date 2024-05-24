@@ -1,10 +1,12 @@
 import { StyleSheet } from "react-native";
 import { View } from "@/components/Themed";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import usePath from "@/hooks/usePath";
 import Map from "@/components/Path/Map";
 import PathMetrics from "@/components/Path/Metrics";
+import { Path, getPath } from "@/helpers/db/tracks";
+import { useLocalSearchParams } from "expo-router";
 
 // + ask for location permission
 // + fetch trackId from params
@@ -13,14 +15,31 @@ import PathMetrics from "@/components/Path/Metrics";
 
 export default function PathScreen() {
   const route = useRoute();
-  const [trackId, setTrackId] = useState<number>(-1);
+  const { trackId } = useLocalSearchParams<{
+    trackId: string;
+  }>();
+  const [path, setPath] = useState<Path[]>([]);
 
   const pathHook = usePath();
+
+  useEffect(() => {
+    console.log({ trackId });
+    const fetch = async () => {
+      const [error, _path] = await getPath(trackId as string);
+
+      if (error) console.error(error);
+      else if (_path) setPath(_path);
+    };
+
+    if (trackId) {
+      fetch();
+    }
+  }, [trackId]);
 
   return (
     <View style={styles.container}>
       <Map trackId={trackId} hook={pathHook} />
-      <PathMetrics hook={pathHook} />
+      <PathMetrics trackId={trackId} hook={pathHook} />
     </View>
   );
 }
@@ -29,5 +48,6 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
+    backgroundColor: "#f2f2f2",
   },
 });

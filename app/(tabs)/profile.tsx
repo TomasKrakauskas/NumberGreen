@@ -12,6 +12,8 @@ import { Text, View } from "@/components/Themed";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth } from "@/firebaseConfig";
 import { Button } from "react-native-paper";
+import createUserFirestoreDocs from "@/helpers/createUserDocs";
+=======
 import { Dropdown } from "react-native-element-dropdown";
 import { passwordValidator } from "@/helpers/passwordValidator";
 import { useNavigation } from "@react-navigation/native";
