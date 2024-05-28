@@ -11,12 +11,24 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
+import { Provider } from "react-redux";
+import store from "@/store/store";
+
 import { useColorScheme } from "@/components/useColorScheme";
+
+import { onAuthStateChanged } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
+import { auth } from "@/firebaseConfig";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from "expo-router";
+
+type RootStackParamList = {
+  LoginScreen: undefined;
+};
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -53,27 +65,45 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigation.navigate("LoginScreen");
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <PaperProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="RegisterScreen"
-            options={{ headerShown: false }}
-          />
+      <ThemeProvider value={DefaultTheme}>
+        <Provider store={store}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="RegisterScreen"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AchievementsScreen"
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen name="ResetPasswordScreen" />
-          <Stack.Screen
-            name="path"
-            options={{
-              title: "Path",
-            }}
-            initialParams={{ trackId: -1 }}
-          />
-        </Stack>
+            <Stack.Screen name="ResetPasswordScreen" />
+            <Stack.Screen
+              name="path"
+              options={{
+                title: "Path",
+              }}
+              initialParams={{ trackId: undefined }}
+            />
+          </Stack>
+        </Provider>
       </ThemeProvider>
     </PaperProvider>
   );
