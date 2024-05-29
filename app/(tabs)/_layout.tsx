@@ -50,6 +50,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
-    </Tabs>
+
+     <Tabs.Screen
+        name="quests"
+        options={{
+          title: "Quests",
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      </Tabs>
   );
 }
