@@ -7,6 +7,9 @@ import {
 } from "../helpers/location";
 import { getDistance } from "geolib";
 import { getUnixTimeStamp } from "@/helpers/util";
+import { createTrack } from "@/helpers/db/tracks";
+import { createPerformance } from "@/helpers/db/track_performance";
+import { auth } from "@/firebaseConfig";
 
 export type PathStatus = "preparing" | "ready" | "tracking" | "finished";
 
@@ -26,6 +29,7 @@ export interface IPath {
 
   start: () => Promise<void>;
   finish: () => void;
+  save: (trackId: string | undefined) => Promise<void>;
 }
 export interface IUserPathMetrics {
   start: number; // timestamp
@@ -165,6 +169,64 @@ export default function usePath(): IPath {
     });
   };
 
+  const save = async (trackId: string | undefined): Promise<void> => {
+    // verify user is connected
+    const user = auth.currentUser;
+    if (!user?.uid) {
+      console.error("No user logged in!");
+      return;
+    }
+    const userId = user?.uid;
+
+    // minimize path data for storage
+    const _path = path.map((item) => ({
+      latitude: item.latitude,
+      longitude: item.longitude,
+      altitude: item.altitude,
+    }));
+
+    // construct performance object
+    const performance = {
+      ...userMetrics,
+      path: _path,
+    };
+
+    // create new track and performance
+    if (!trackId) {
+      // construct track object
+      const track = {
+        markers: [] as { latitude: number; longitude: number; name: string }[],
+        polyline: _path,
+        trackName: "",
+        image: "",
+        description: "",
+        distance: userMetrics.distance,
+        steps: userMetrics.stepsTaken,
+      };
+      const [error, response] = await createTrack(userId, track, performance);
+      if (error) console.error(error);
+      else if (response)
+        console.log({
+          response,
+        });
+    }
+    // save only performance
+    else {
+      const [error, performanceId] = await createPerformance(
+        userId,
+        trackId,
+        performance
+      );
+      if (error) console.error(error);
+      else if (performanceId)
+        console.log({
+          performanceId,
+        });
+    }
+
+    return;
+  };
+
   return {
     isAllowed,
     status,
@@ -176,5 +238,6 @@ export default function usePath(): IPath {
 
     start,
     finish,
+    save,
   };
 }

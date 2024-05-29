@@ -3,9 +3,15 @@ import { IPath } from "@/hooks/usePath";
 import { Button, Text } from "react-native-paper";
 import TimePassed from "../TimePassed";
 
-export default function PathMetrics({ hook }: { hook: IPath }) {
+export default function PathMetrics({
+  trackId,
+  hook,
+}: {
+  trackId: string | undefined;
+  hook: IPath;
+}) {
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollContainter}>
       {hook.status === "ready" && (
         <View style={styles.startContainer}>
           <Button
@@ -20,27 +26,38 @@ export default function PathMetrics({ hook }: { hook: IPath }) {
       {(hook.status === "tracking" || hook.status === "finished") && (
         <View style={styles.wrapper}>
           <View style={styles.item}>
-            <Text variant="titleMedium">Distance</Text>
-            <Text variant="bodyMedium">
+            <Text style={styles.itemText} variant="titleMedium">
+              Distance
+            </Text>
+            <Text style={styles.itemText} variant="bodyMedium">
               {(hook.userMetrics.distance / 1000).toFixed(2)}km
             </Text>
           </View>
           <View style={styles.item}>
-            <Text variant="titleMedium">Time</Text>
+            <Text style={styles.itemText} variant="titleMedium">
+              Time
+            </Text>
             <TimePassed
               start={hook.userMetrics.start}
               ended={hook.userMetrics.end}
+              style={{
+                color: "#343434",
+              }}
             />
           </View>
           <View style={styles.item}>
-            <Text variant="titleMedium">Steps</Text>
-            <Text variant="bodyMedium">
+            <Text style={styles.itemText} variant="titleMedium">
+              Steps
+            </Text>
+            <Text style={styles.itemText} variant="bodyMedium">
               {(hook.userMetrics.distance / 0.762).toFixed(0)}
             </Text>
           </View>
           <View style={styles.item}>
-            <Text variant="titleMedium">Avg. Speed</Text>
-            <Text variant="bodyMedium">
+            <Text style={styles.itemText} variant="titleMedium">
+              Avg. Speed
+            </Text>
+            <Text style={styles.itemText} variant="bodyMedium">
               {Math.ceil(hook.userMetrics.speed_ms * 3.6).toFixed(1)} km/h
             </Text>
           </View>
@@ -60,7 +77,7 @@ export default function PathMetrics({ hook }: { hook: IPath }) {
               <Button
                 style={styles.actionButton}
                 mode="contained"
-                onPress={() => console.log("Saved!")}
+                onPress={() => hook.save(trackId)}
               >
                 Save
               </Button>
@@ -73,6 +90,9 @@ export default function PathMetrics({ hook }: { hook: IPath }) {
 }
 
 const styles = StyleSheet.create({
+  scrollContainter: {
+    backgroundColor: "#f2f2f2",
+  },
   startContainer: {
     paddingVertical: 48,
     display: "flex",
@@ -93,6 +113,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "50%",
     height: 100,
+  },
+  itemText: {
+    color: "#343434",
   },
   itemFull: {
     display: "flex",
