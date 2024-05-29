@@ -1,23 +1,79 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-  StatusBar,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
+import { Text, View } from "@/components/Themed";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from "@/firebaseConfig";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { AntDesign } from "@expo/vector-icons";
 
 const AchievementsScreen = () => {
+  const [profileData, setProfileData] = useState(null);
   const navigation = useNavigation();
-  const [statusBarHeight, setStatusBarHeight] = useState(0);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const firestore = getFirestore();
+          const profileRef = doc(firestore, "profile", user.uid);
+          const profileSnapshot = await getDoc(profileRef);
+          if (profileSnapshot.exists()) {
+            setProfileData(profileSnapshot.data());
+            console.log({
+              DATA: profileSnapshot.data().badges,
+            });
+          } else {
+            console.log("Profile document does not exist");
+          }
+        } else {
+          console.log("User is not authenticated");
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    fetchProfileData();
+
+    return () => {
+      setProfileData(null);
+    };
+  }, []);
+
+  // Sample data for achievements
 
   const handleBack = () => {
     navigation.goBack();
   };
+
+  const renderAchievement = ({ item }) => (
+    <View key={item.badge_link} style={styles.achievementContainer}>
+      <View style={styles.achievementContent}>
+        <Image
+          source={{ uri: item.badge_link }}
+          style={styles.achievementImage}
+        />
+        <View style={styles.textContainer}>
+          <View style={styles.nameProgressContainer}>
+            <Text style={styles.achievementName}>{item.badge_name} </Text>
+            <Text style={styles.progressText}>{item.current_progress}%</Text>
+          </View>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBarBackground}>
+              <View
+                style={{
+                  ...styles.progressBar,
+                  width: `${item.current_progress}`,
+                }}
+              />
+            </View>
+          </View>
+          <Text style={styles.achievementDescription}>{item.description}</Text>
+        </View>
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -27,7 +83,14 @@ const AchievementsScreen = () => {
         </TouchableOpacity>
         <Text style={styles.mainText}>Achievements</Text>
       </View>
-      {/* Your content below the top area */}
+      <FlatList
+        data={profileData ? profileData.badges : []}
+        renderItem={renderAchievement}
+        keyExtractor={(item) => item.id}
+        horizontal={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.achievementsList}
+      />
     </View>
   );
 };
@@ -38,18 +101,87 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   topArea: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#e6eaf1",
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 35,
+    justifyContent: "center",
+    paddingBottom: 13,
+    marginBottom: 10,
   },
   backButton: {
-    marginRight: 16,
+    marginBottom: 17,
+    marginLeft: 25,
+    position: "absolute",
+    left: 0,
+    bottom: 0,
   },
   mainText: {
-    fontSize: 25,
+    marginTop: 50,
+    fontSize: 28,
+    fontWeight: "600",
+    color: "#343434",
+  },
+  achievementsList: {
+    paddingHorizontal: 16,
+  },
+  achievementContainer: {
+    marginRight: 16,
+  },
+  achievementContent: {
+    flexDirection: "row",
+  },
+  achievementImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 64,
+    marginTop: 25,
+    marginRight: 10,
+    marginStart: 5,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  achievementName: {
+    marginTop: 25,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  nameProgressContainer: {
+    flexDirection: "row",
+  },
+  progressContainer: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  progressBarBackground: {
+    flex: 1,
+    height: 10,
+    borderRadius: 8,
+    backgroundColor: "#d9d9d9", // Gray color
+    overflow: "hidden",
+    position: "relative",
+  },
+  progressBar: {
+    height: 11,
+    backgroundColor: "#003f88", // Blue color
+    borderRadius: 6,
+    position: "absolute",
+    left: 0,
+    top: 0,
+  },
+  progressText: {
+    fontSize: 10,
+    fontWeight: "400",
+    color: "#a4a4a4",
+    marginTop: 28,
     marginLeft: "auto",
-    marginRight: "auto",
+  },
+  achievementDescription: {
+    marginTop: 10,
+    fontSize: 10,
+    fontWeight: "400",
+    color: "#8d8d8d",
   },
 });
 
