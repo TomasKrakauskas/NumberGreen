@@ -13,7 +13,7 @@ import {
   MTrackPerformance,
   createPerformance,
   getUserPerformancesOfTrack,
-} from "./performance";
+} from "./track_performance";
 
 export interface MTrack {
   id: string;

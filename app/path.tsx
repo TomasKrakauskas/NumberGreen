@@ -23,7 +23,6 @@ export default function PathScreen() {
   const pathHook = usePath();
 
   useEffect(() => {
-    console.log({ trackId });
     const fetch = async () => {
       const [error, _path] = await getPath(trackId as string);
 
