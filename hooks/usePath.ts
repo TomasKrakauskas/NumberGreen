@@ -8,7 +8,7 @@ import {
 import { getDistance } from "geolib";
 import { getUnixTimeStamp } from "@/helpers/util";
 import { createTrack } from "@/helpers/db/tracks";
-import { createPerformance } from "@/helpers/db/performance";
+import { createPerformance } from "@/helpers/db/track_performance";
 import { auth } from "@/firebaseConfig";
 
 export type PathStatus = "preparing" | "ready" | "tracking" | "finished";

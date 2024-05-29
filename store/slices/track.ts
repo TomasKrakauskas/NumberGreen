@@ -28,11 +28,6 @@ export const loadTracks = createAsyncThunk(
       if (userError) console.error("loadTracks", { userError });
       if (publicError) console.error("loadTracks", { publicError });
 
-      console.log({
-        userTracks,
-        publicTracks,
-      });
-
       return {
         userTracks: userTracks ? userTracks : [],
         publicTracks: publicTracks ? publicTracks : [],
