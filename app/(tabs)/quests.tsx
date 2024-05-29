@@ -64,8 +64,11 @@ export default function app() {
 
     return(
 <ListItems items={[
-  { title: 'Place 1', description: 'Description of place 1', icon: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FPixelArt%2Fcomments%2F15z47dt%2Fi_got_bored_so_i_decided_to_draw_a_random_image%2F&psig=AOvVaw00Ca9IjF2XH3gOR6QB3zWM&ust=1715625766873000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPji0ZTiiIYDFQAAAAAdAAAAABAE", distance: 5 },
-  { title: 'Place 2', description: 'Description of place 2', icon: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FPixelArt%2Fcomments%2F15z47dt%2Fi_got_bored_so_i_decided_to_draw_a_random_image%2F&psig=AOvVaw00Ca9IjF2XH3gOR6QB3zWM&ust=1715625766873000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPji0ZTiiIYDFQAAAAAdAAAAABAE", distance: 15 }
+{ title: 'Beginnner', description: 'Take a 5 km hike', icon: "https://cdn-icons-png.flaticon.com/512/7037/7037293.png", distance: 5 },
+  { title: 'Initiation', description: 'Prove you\'re worthy to join the clan', icon: "https://cdn-icons-png.flaticon.com/512/7037/7037293.png", distance: 15 },
+  { title: 'Proving grounds', description: 'The next step of your journey', icon: "https://cdn-icons-png.flaticon.com/512/7037/7037293.png", distance: 10 },
+  { title: 'Elder Quest', description: 'Help a newbie grow', icon: "https://cdn-icons-png.flaticon.com/512/7037/7037293.png", distance: 20 },
+  { title: 'Master of fives', description: 'Organize a walkathon', icon: "https://cdn-icons-png.flaticon.com/512/7037/7037293.png", distance: 25 },
 ]}
 naviagateToDetail={navigateToDetail}
 />
