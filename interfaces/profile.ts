@@ -1,6 +1,7 @@
 import {Badge} from '@/interfaces/badge';
 
 export interface Profile {
+  difficulty: string;
   badges: Badge[]; 
   metrics: {
     average_pace: number;

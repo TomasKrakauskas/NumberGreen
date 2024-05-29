@@ -51,6 +51,7 @@ export default async function createUserFirestoreDocs(userId: string) {
   };
 
   const defaultProfileData: Profile = {
+    difficulty: "medium",
     badges: badges,
     metrics: {
       average_pace: 7,
