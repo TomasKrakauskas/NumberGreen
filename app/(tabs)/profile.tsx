@@ -465,6 +465,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     fontSize: 20,
     fontWeight: "bold",
+    color: "#000000",
   },
   settingContainer2: {
     backgroundColor: "#f2f2f2",

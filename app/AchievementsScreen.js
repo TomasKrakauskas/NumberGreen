@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     fontSize: 14,
     fontWeight: "600",
+    color: "#000000",
   },
   nameProgressContainer: {
     backgroundColor: "#ffffff",
@@ -163,7 +164,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   progressBarBackground: {
-    backgroundColor: "#ffffff",
     flex: 1,
     height: 10,
     borderRadius: 8,
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   progressBar: {
-    backgroundColor: "#ffffff",
     height: 11,
     backgroundColor: "#003f88", // Blue color
     borderRadius: 6,
