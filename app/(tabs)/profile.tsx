@@ -458,9 +458,11 @@ const styles = StyleSheet.create({
     borderRadius: 77.5,
   },
   usernameContainer: {
+    backgroundColor: "#ffffff",
     alignItems: "center",
   },
   nickname: {
+    backgroundColor: "#ffffff",
     fontSize: 20,
     fontWeight: "bold",
   },

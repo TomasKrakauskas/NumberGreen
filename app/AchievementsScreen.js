@@ -122,15 +122,19 @@ const styles = StyleSheet.create({
     color: "#343434",
   },
   achievementsList: {
+    backgroundColor: "#ffffff",
     paddingHorizontal: 16,
   },
   achievementContainer: {
+    backgroundColor: "#ffffff",
     marginRight: 16,
   },
   achievementContent: {
+    backgroundColor: "#ffffff",
     flexDirection: "row",
   },
   achievementImage: {
+    backgroundColor: "#ffffff",
     width: 64,
     height: 64,
     borderRadius: 64,
@@ -139,22 +143,27 @@ const styles = StyleSheet.create({
     marginStart: 5,
   },
   textContainer: {
+    backgroundColor: "#ffffff",
     flex: 1,
   },
   achievementName: {
+    backgroundColor: "#ffffff",
     marginTop: 25,
     fontSize: 14,
     fontWeight: "600",
   },
   nameProgressContainer: {
+    backgroundColor: "#ffffff",
     flexDirection: "row",
   },
   progressContainer: {
+    backgroundColor: "#ffffff",
     marginTop: 10,
     flexDirection: "row",
     alignItems: "center",
   },
   progressBarBackground: {
+    backgroundColor: "#ffffff",
     flex: 1,
     height: 10,
     borderRadius: 8,
@@ -163,6 +172,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   progressBar: {
+    backgroundColor: "#ffffff",
     height: 11,
     backgroundColor: "#003f88", // Blue color
     borderRadius: 6,
@@ -171,6 +181,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   progressText: {
+    backgroundColor: "#ffffff",
     fontSize: 10,
     fontWeight: "400",
     color: "#a4a4a4",
@@ -178,6 +189,7 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
   },
   achievementDescription: {
+    backgroundColor: "#ffffff",
     marginTop: 10,
     fontSize: 10,
     fontWeight: "400",
