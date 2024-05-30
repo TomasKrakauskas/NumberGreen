@@ -11,6 +11,7 @@ import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Text, View } from "@/components/Themed";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth } from "@/firebaseConfig";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { Button } from "react-native-paper";
 import createUserFirestoreDocs from "@/helpers/createUserDocs";
 import { Dropdown } from "react-native-element-dropdown";
@@ -35,6 +36,7 @@ const ProfileScreen = () => {
   const [value, setValue] = useState("Easy");
   const [isFocus, setIsFocus] = useState(false);
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -45,6 +47,7 @@ const ProfileScreen = () => {
       try {
         const user = auth.currentUser;
         if (user) {
+          setEmail(user.email || "");
           const firestore = getFirestore();
           const profileRef = doc(firestore, "profile", user.uid);
           const profileSnapshot = await getDoc(profileRef);
@@ -78,7 +81,7 @@ const ProfileScreen = () => {
 
   const editProfile = async () => {
     if (difficulty === "") setDifficulty(profileData.difficulty);
-    if (username === "") setUsername(profileData.username);
+    if (username === "") setUsername(profileData.metrics.username);
     setEditMode(!editMode);
   };
 
@@ -144,11 +147,15 @@ const ProfileScreen = () => {
         const firestore = getFirestore();
         const profileRef = doc(firestore, "profile", user.uid);
         await updateDoc(profileRef, {
-          username: username,
+          "metrics.username": username,
           difficulty: difficulty,
         });
+        setProfileData((prevData: any) => ({
+          ...prevData,
+          metrics: { ...prevData.metrics, username: username },
+          difficulty: difficulty,
+        }));
         setEditMode(false);
-        setProfileData({ ...profileData, username: username });
       } else {
         console.log("User is not authenticated");
       }
@@ -170,10 +177,10 @@ const ProfileScreen = () => {
         <View style={styles.contentContainer}>
           <View style={styles.topArea}>
             {profileData &&
-            profileData.user_image &&
-            isValidUrl(profileData.user_image) ? (
+            profileData.metrics.user_image &&
+            isValidUrl(profileData.metrics.user_image) ? (
               <Image
-                source={{ uri: profileData.user_image }}
+                source={{ uri: profileData.metrics.user_image }}
                 style={styles.profileIcon}
               />
             ) : (
@@ -182,59 +189,93 @@ const ProfileScreen = () => {
               </View>
             )}
             <View style={styles.usernameContainer}>
-              <Text style={styles.nickname}>{profileData.username}</Text>
+              <Text style={styles.nickname}>
+                {profileData.metrics.username}
+              </Text>
             </View>
           </View>
           <View style={styles.settingContainer2}>
-            <Button
-              mode="contained"
-              compact
-              style={styles.logoutButton2}
-              onPress={logOutUser}
-            >
-              Logout
-            </Button>
-            <Button
-              mode="contained-tonal"
-              textColor="#333333"
-              compact
-              style={styles.editButton2}
-              onPress={editProfile}
-            >
-              Edit
-            </Button>
-            <Button
-              mode="contained-tonal"
-              textColor="#333333"
-              compact
-              style={styles.changePassword2}
+            <TouchableOpacity style={styles.logoutButton} onPress={logOutUser}>
+              <View style={styles.buttonContentLog}>
+                <Text style={styles.buttonTextLog}>Logout</Text>
+                <Image
+                  source={{
+                    uri: "https://cdn0.iconfinder.com/data/icons/essentials-28/24/Switch-512.png",
+                  }}
+                  style={[styles.buttonIconLog, { tintColor: "white" }]}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.editButton} onPress={editProfile}>
+              <View style={styles.buttonContent}>
+                <Text style={styles.buttonText}>Edit</Text>
+                <Image
+                  source={{
+                    uri: "https://cdn.iconscout.com/icon/premium/png-512-thumb/pencil-2524787-2140538.png?f=webp&w=256",
+                  }}
+                  style={styles.buttonIcon}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.changePasswordButton}
               onPress={changePassword}
             >
-              Change password
-            </Button>
+              <View style={styles.buttonContent}>
+                <Text style={styles.buttonText}>Change password</Text>
+                <Image
+                  source={{
+                    uri: "https://cdn.iconscout.com/icon/free/png-512/free-key-2694334-2236330.png?f=webp&w=256",
+                  }}
+                  style={styles.buttonIcon}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.metricsContainer}>
             <Text style={styles.metricsTitle}>Metrics</Text>
             <View style={styles.oneRawMetrics}>
               <View style={styles.stepsContainer}>
-                <Text style={styles.metricText}>Total Steps:</Text>
+                <View style={styles.iconAndText}>
+                  <Text style={styles.metricText}>Total Steps:</Text>
+                  <Image
+                    source={{
+                      uri: "https://cdn.iconscout.com/icon/premium/png-512-thumb/running-shoe-3632814-3153869.png?f=webp&w=256",
+                    }}
+                    style={styles.icon}
+                  />
+                </View>
                 <Text style={styles.metricItemText}>
                   {profileData.metrics.total_steps}
                 </Text>
               </View>
               <View style={styles.routeContainer}>
-                <Text style={styles.metricText}>Longest Route:</Text>
+                <View style={styles.iconAndText}>
+                  <Text style={styles.metricText}>Longest Route:</Text>
+                  <Image
+                    source={{
+                      uri: "https://cdn.iconscout.com/icon/free/png-512/free-route-4128993-3433515.png?f=webp&w=256",
+                    }}
+                    style={styles.icon}
+                  />
+                </View>
                 <Text style={styles.metricItemText}>
-                  {profileData.metrics.longest_route}
-                  <Text> km</Text>
+                  {profileData.metrics.longest_route} km
                 </Text>
               </View>
             </View>
             <View style={styles.paceContainer}>
-              <Text style={styles.metricText}>Fastest Pace:</Text>
+              <View style={styles.iconAndText}>
+                <Text style={styles.metricText}>Fastest Pace:</Text>
+                <Image
+                  source={{
+                    uri: "https://cdn.iconscout.com/icon/premium/png-512-thumb/time-rush-4079314-3403417.png?f=webp&w=256",
+                  }}
+                  style={styles.icon}
+                />
+              </View>
               <Text style={styles.metricItemText}>
-                {profileData.metrics.fastest_pace}
-                <Text> km/h</Text>
+                {profileData.metrics.fastest_pace} km/h
               </Text>
             </View>
           </View>
@@ -277,10 +318,10 @@ const ProfileScreen = () => {
             </Button>
             <Text style={styles.editProfileTitle}>Edit Profile</Text>
             {profileData &&
-            profileData.user_image &&
-            isValidUrl(profileData.user_image) ? (
+            profileData.metrics.user_image &&
+            isValidUrl(profileData.metrics.user_image) ? (
               <Image
-                source={{ uri: profileData.user_image }}
+                source={{ uri: profileData.metrics.user_image }}
                 style={styles.editProfileIcon}
               />
             ) : (
@@ -289,7 +330,11 @@ const ProfileScreen = () => {
               </View>
             )}
             <Text style={styles.editTextFeilds}>Email</Text>
-            <TextInput style={styles.editTextInputs} placeholder="Email" />
+            <TextInput
+              style={styles.editTextInputs}
+              value={email}
+              onChangeText={setEmail}
+            />
             <Text style={styles.editTextFeilds}>Username</Text>
             <TextInput
               style={styles.editTextInputs}
@@ -426,34 +471,62 @@ const styles = StyleSheet.create({
     marginLeft: 32,
     marginRight: 32,
   },
-  logoutButton2: {
+  buttonContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 8,
+    backgroundColor: "#e2e2e2",
+    borderRadius: 6,
+  },
+  buttonContentLog: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 8,
     backgroundColor: "#ef5350",
-    color: "#000000",
     borderRadius: 6,
-    paddingLeft: 8,
-    paddingRight: 8,
-    gap: 8,
-    fontSize: 12,
   },
-  editButton2: {
-    backgroundColor: "#e2e2e2",
-    color: "#FFFFFF",
-    borderRadius: 6,
-    paddingLeft: 8,
-    paddingRight: 8,
-    gap: 8,
+  buttonText: {
     fontSize: 12,
+    fontWeight: 400,
+    color: "#343434",
+  },
+  buttonTextLog: {
+    fontSize: 12,
+    fontWeight: 400,
+    color: "#FFFFFF",
+  },
+  buttonIcon: {
+    width: 14,
+    height: 14,
+    marginLeft: 6,
+  },
+  buttonIconLog: {
+    width: 14,
+    height: 14,
+    marginLeft: 6,
+    tintColor: "ffffff",
+  },
+  editButton: {
+    backgroundColor: "#e2e2e2",
     marginLeft: 44,
-  },
-  changePassword2: {
-    backgroundColor: "#e2e2e2",
-    color: "#FFFFFF",
     borderRadius: 6,
-    paddingLeft: 8,
-    paddingRight: 8,
-    gap: 8,
-    fontSize: 12,
+  },
+  changePasswordButton: {
+    backgroundColor: "#e2e2e2",
     marginLeft: 8,
+    borderRadius: 6,
+  },
+  logoutButton: {
+    backgroundColor: "#ef5350",
+    borderRadius: 6,
   },
   oneRawMetrics: {
     backgroundColor: "#f2f2f2",
@@ -470,6 +543,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     alignSelf: "flex-start",
+    color: "#343434",
   },
   stepsContainer: {
     marginTop: 16,
@@ -494,11 +568,24 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: "#dde5ed",
   },
+  iconAndText: {
+    backgroundColor: "#dde5ed",
+    flexDirection: "row",
+    justifyContent: "space-between", // Ensure space between text and icon
+    alignItems: "center", // Vertically center the items
+    paddingHorizontal: 16,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginTop: 16,
+    alignSelf: "flex-end",
+    justifyContent: "flex-end",
+  },
   metricText: {
     backgroundColor: "#dde5ed",
     color: "#343434",
     fontSize: 10,
-    marginLeft: 16,
     marginTop: 16,
   },
   metricItemText: {
@@ -583,6 +670,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     fontWeight: "600",
     fontSize: 20,
+    color: "#343434",
   },
   editProfileIcon: {
     alignSelf: "center",
@@ -607,7 +695,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontWeight: "400",
     fontSize: 12,
-    color: "#a3a3a3",
+    color: "#7b7d7f",
   },
   editDifficultyInputs: {
     borderRadius: 6,
@@ -617,7 +705,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontWeight: "400",
     fontSize: 12,
-    color: "#a3a3a3",
+    color: "#7b7d7f",
     alignSelf: "center",
   },
   saveEditProfileButton: {
@@ -652,7 +740,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     fontWeight: "400",
     fontSize: 12,
-    color: "#a3a3a3",
+    color: "#7b7d7f",
   },
   label: {
     position: "absolute",
@@ -663,23 +751,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     fontWeight: "400",
     fontSize: 12,
-    color: "#a3a3a3",
+    color: "#7b7d7f",
   },
   placeholderStyle: {
     fontWeight: "400",
     fontSize: 12,
-    color: "#a3a3a3",
+    color: "#7b7d7f",
   },
   selectedTextStyle: {
     fontWeight: "400",
     fontSize: 12,
-    color: "#a3a3a3",
+    color: "#7b7d7f",
   },
   inputSearchStyle: {
     height: 40,
     fontWeight: "400",
     fontSize: 12,
-    color: "#a3a3a3",
+    color: "#7b7d7f",
   },
 });
 

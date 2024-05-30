@@ -21,7 +21,7 @@ const AchievementsScreen = () => {
           if (profileSnapshot.exists()) {
             setProfileData(profileSnapshot.data());
             console.log({
-              DATA: profileSnapshot.data().badges,
+              DATA: profileSnapshot.data(),
             });
           } else {
             console.log("Profile document does not exist");
@@ -48,7 +48,7 @@ const AchievementsScreen = () => {
   };
 
   const renderAchievement = ({ item }) => (
-    <View key={item.badge_link} style={styles.achievementContainer}>
+    <View style={styles.achievementContainer}>
       <View style={styles.achievementContent}>
         <Image
           source={{ uri: item.badge_link }}
@@ -64,7 +64,7 @@ const AchievementsScreen = () => {
               <View
                 style={{
                   ...styles.progressBar,
-                  width: `${item.current_progress}`,
+                  width: `${item.current_progress}%`,
                 }}
               />
             </View>
@@ -86,7 +86,7 @@ const AchievementsScreen = () => {
       <FlatList
         data={profileData ? profileData.badges : []}
         renderItem={renderAchievement}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.badge_link}
         horizontal={false}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.achievementsList}
